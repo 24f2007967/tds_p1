@@ -27,24 +27,50 @@ log_counter = 0
 conversation_history = {}
 
 
+import os
+import base64
+import requests
+
 def push_log_to_github():
-    try:
-        subprocess.run(["git", "add", LOG_FILE], check=True)
+    token = os.getenv("GITHUB_TOKEN")
+    owner = os.getenv("GITHUB_OWNER")
+    repo = os.getenv("GITHUB_REPO")
+    branch = os.getenv("GITHUB_BRANCH", "main")
 
-        # Don't fail if there's nothing new to commit
-        subprocess.run(
-            ["git", "commit", "-m", "Update run log"],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+    }
 
-        subprocess.run(["git", "push"], check=True)
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/run.jsonl"
 
-        print("run.jsonl pushed to GitHub")
+    # Get current file SHA
+    response = requests.get(url, headers=headers, params={"ref": branch})
 
-    except Exception as e:
-        print("Git push failed:", e)
+    sha = None
+    if response.status_code == 200:
+        sha = response.json()["sha"]
+
+    with open("run.jsonl", "rb") as f:
+        content = base64.b64encode(f.read()).decode()
+
+    body = {
+        "message": "Update run.jsonl",
+        "content": content,
+        "branch": branch,
+    }
+
+    if sha:
+        body["sha"] = sha
+
+    r = requests.put(url, headers=headers, json=body)
+
+    if r.status_code in (200, 201):
+        print("GitHub updated successfully")
+    else:
+        print("GitHub upload failed")
+        print(r.status_code)
+        print(r.text)
 
 
 def log_event(event: dict):
