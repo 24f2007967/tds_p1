@@ -12,7 +12,8 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 AIPIPE_TOKEN = os.getenv("AIPIPE_TOKEN")
 LOG_URL = "https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl"
 # -----------------------------
-
+PORT = int(os.environ.get("PORT", 10000))
+WEBHOOK_URL = os.environ["WEBHOOK_URL"]
 client = OpenAI(
     base_url="https://aipipe.org/openai/v1",
     api_key=AIPIPE_TOKEN,
@@ -142,13 +143,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(final_reply)
 
-
 app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
 app.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
 )
 
-print("Bot is running... (Ctrl+C to stop)")
+print("Starting webhook...")
 
-app.run_polling()
+app.run_webhook(
+    listen="0.0.0.0",
+    port=PORT,
+    url_path=TELEGRAM_BOT_TOKEN,
+    webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_BOT_TOKEN}",
+)
