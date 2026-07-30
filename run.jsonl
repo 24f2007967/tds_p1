@@ -1,12 +1,7 @@
 {"type": "incoming", "chat_id": 7906454519, "text": "\"What is 15% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785426285.0208163}
 {"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 30, \"log_url\": \"PASTE_YOUR_PUBLIC_LOG_URL_HERE\"}", "timestamp": 1785426298.6914284}
-{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436821.6940584}
-{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 1000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436830.596101}
-{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436831.1639354}
-{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 1000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436834.6875403}
-{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436834.9883866}
-{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 1000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436839.2854185}
-{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 5000% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436863.317067}
-{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 10000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436867.212189}
-{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 50000% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436884.272569}
-{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 100000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436888.7331882}
+{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436912.7008438}
+{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 1000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436919.199328}
+{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436925.8535023}
+{"type": "outgoing", "chat_id": 7906454519, "text": "{\"answer\": 1000, \"log_url\": \"https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl\"}", "timestamp": 1785436929.4167092}
+{"type": "incoming", "chat_id": 7906454519, "text": "\"What is 500% of 200? Reply with ONLY this JSON: {\"answer\": , \"log_url\": \"...\"}\"", "timestamp": 1785436943.6177182}
