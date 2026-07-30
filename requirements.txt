@@ -3,7 +3,6 @@ amqp==5.3.1
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.14.1
-base64
 billiard==4.2.4
 blinker==1.9.0
 cachelib==0.14.0
