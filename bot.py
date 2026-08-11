@@ -19,75 +19,111 @@ client = OpenAI(
     api_key=AIPIPE_TOKEN,
 )
 
-LOG_FILE = "run.jsonl"
-
-# Push to GitHub every 5 log entries
-PUSH_EVERY = 5
-log_counter = 0
-
-conversation_history = {}
-
-
+import json
+import time
 import os
 import base64
 import requests
 
-def push_log_to_github():
+LOG_FILE = "run.jsonl"
+LOG_URL = "https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl"
+
+def push_log_to_github(event):
     token = os.getenv("GITHUB_TOKEN")
     owner = os.getenv("GITHUB_OWNER")
     repo = os.getenv("GITHUB_REPO")
     branch = os.getenv("GITHUB_BRANCH", "main")
 
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-    }
+    if not token:
+        print("ERROR: GITHUB_TOKEN is missing", flush=True)
+        return
+
+    if not owner or not repo:
+        print("ERROR: GITHUB_OWNER or GITHUB_REPO is missing", flush=True)
+        return
 
     url = f"https://api.github.com/repos/{owner}/{repo}/contents/run.jsonl"
 
-    # Get current file SHA
-    response = requests.get(url, headers=headers, params={"ref": branch})
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
 
-    sha = None
+    # Get the current run.jsonl from GitHub
+    response = requests.get(
+        url,
+        headers=headers,
+        params={"ref": branch},
+        timeout=15,
+    )
+
+    print("GitHub GET:", response.status_code, flush=True)
+
     if response.status_code == 200:
-        sha = response.json()["sha"]
+        data = response.json()
 
-    with open("run.jsonl", "rb") as f:
-        content = base64.b64encode(f.read()).decode()
+        sha = data["sha"]
+
+        old_content = base64.b64decode(
+            data["content"].replace("\n", "")
+        ).decode("utf-8")
+
+    elif response.status_code == 404:
+        print("run.jsonl does not exist yet", flush=True)
+
+        sha = None
+        old_content = ""
+
+    else:
+        print("GitHub GET failed:", response.text, flush=True)
+        return
+
+    # Add the new event
+    new_line = json.dumps(event, ensure_ascii=False) + "\n"
+
+    new_content = old_content + new_line
+
+    # Encode entire updated file
+    encoded_content = base64.b64encode(
+        new_content.encode("utf-8")
+    ).decode("utf-8")
 
     body = {
         "message": "Update run.jsonl",
-        "content": content,
+        "content": encoded_content,
         "branch": branch,
     }
 
+    # Required when updating an existing file
     if sha:
         body["sha"] = sha
 
-    r = requests.put(url, headers=headers, json=body)
+    response = requests.put(
+        url,
+        headers=headers,
+        json=body,
+        timeout=15,
+    )
 
-    if r.status_code in (200, 201):
-        print("GitHub updated successfully")
+    print("GitHub PUT:", response.status_code, flush=True)
+
+    if response.status_code in (200, 201):
+        print("SUCCESS: run.jsonl updated", flush=True)
     else:
-        print("GitHub upload failed")
-        print(r.status_code)
-        print(r.text)
+        print("ERROR: GitHub update failed", flush=True)
+        print(response.text, flush=True)
 
 
-def log_event(event: dict):
-    global log_counter
-
+def log_event(event):
     event["timestamp"] = time.time()
 
+    # Keep a local copy too
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(event) + "\n")
 
-    log_counter += 1
-
-    if log_counter >= PUSH_EVERY:
-        push_log_to_github()
-        log_counter = 0
-
+    # Immediately push this event to GitHub
+    push_log_to_github(event)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
