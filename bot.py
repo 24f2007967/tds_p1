@@ -27,6 +27,7 @@ import requests
 
 LOG_FILE = "run.jsonl"
 LOG_URL = "https://raw.githubusercontent.com/24f2007967/tds_p1/refs/heads/main/run.jsonl"
+conversation_history = {}
 
 def push_log_to_github(event):
     token = os.getenv("GITHUB_TOKEN")
